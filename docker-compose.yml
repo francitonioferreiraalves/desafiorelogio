@@ -1,0 +1,37 @@
+version: '3'
+
+services:
+  relogio-api:
+    container_name: postgres-db-relogio
+    image: postgres:13.2
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: "postgres"
+      POSTGRES_DB: relogiosx
+      PGDATA: ./data/postgres
+    ports:
+      - "15432:5432"
+    volumes:
+      - ./volumePostgreSQL_auth:/var/lib/postgresql/data 
+    networks:
+      - postgres-compose-network
+      
+  teste-pgadmin-compose:
+    container_name: pgadmin-teste-auth
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: "admin@gmail.com"
+      PGADMIN_DEFAULT_PASSWORD: "admin!"
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+    ports:
+      - "16543:80"
+    depends_on:
+      - relogio-api
+    networks:
+      - postgres-compose-network
+
+networks: 
+  postgres-compose-network:
+    driver: bridge
+    
+    
